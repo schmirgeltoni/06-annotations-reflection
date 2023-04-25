@@ -20,7 +20,7 @@ public class App {
 
 	public static void main(String[] args) throws IOException {
 		Gson gson = new GsonBuilder()
-			.registerTypeAdapter(Joke.class, new JokeAdapter())
+			//.registerTypeAdapter(Joke.class, new JokeAdapter())
 			.registerTypeAdapter(Joke[].class, new JokeArrayAdapter())
 			.create();
 

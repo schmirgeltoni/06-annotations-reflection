@@ -37,7 +37,7 @@ class CNJDBTests {
 	@BeforeEach
 	void setup() {
 		Gson gson = new GsonBuilder()
-			.registerTypeAdapter(Joke.class, new JokeAdapter())
+			//.registerTypeAdapter(Joke.class, new JokeAdapter())
 			.registerTypeAdapter(Joke[].class, new JokeArrayAdapter())
 			.create();
 

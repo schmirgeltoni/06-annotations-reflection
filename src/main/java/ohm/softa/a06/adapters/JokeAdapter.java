@@ -27,9 +27,7 @@ public class JokeAdapter extends TypeAdapter<Joke> {
 
 	@Override
 	public Joke read(JsonReader in) throws IOException {
-		Joke result = null;
-
-		result = gson.fromJson(in, Joke.class);
+		Joke result = gson.fromJson(in, Joke.class);
 
 		return result;
 	}
