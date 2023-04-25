@@ -13,7 +13,6 @@ import java.util.List;
  * Created on 11/9/17.
  */
 public final class Joke {
-
 	@SerializedName("id")
 	private String identifier;
 

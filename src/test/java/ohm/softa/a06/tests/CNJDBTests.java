@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+
 /**
  * @author Peter Kurfer
  * Created on 11/10/17.
