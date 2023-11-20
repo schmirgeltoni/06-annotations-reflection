@@ -107,7 +107,7 @@ Have a look at the [docs](https://github.com/google/gson/blob/master/UserGuide.m
 
 ## Retrofit and Gson
 
-As you could see from the examples above, the actual response body of the CNJDB API looks like the following:
+As you could see from the examples above (and in most cases), the response body of the CNJDB API looks like the following:
 
 ```json
 {
@@ -116,9 +116,45 @@ As you could see from the examples above, the actual response body of the CNJDB 
 	"value": "Chuck Norris can delete the Recycling Bin."
 }
 ```
+That is, if you implement your `Joke` with matching fields (eg. using `@SerializedName`), deserialization works out of the box.
 
-The actual joke (`Joke`) is wrapped inside a response object which indicates if the request was successfull.
-To be able to unwrap the jokes correctly (or throw an exception if there is no joke) you need to implement a Gson type adapter as shown in the following UML.
+Sometimes, however, the servers response isn't quite right, consider for example the output of 
+
+```bash
+GET https://api.chucknorris.io/jokes/search?query=royalties`
+
+{
+  "total": 1,
+  "result": [
+    {
+      "categories": [],
+      "created_at": "2020-01-05 13:42:19.104863",
+      "icon_url": "https://assets.chucknorris.host/img/avatar/chuck-norris.png",
+      "id": "o21pece2rn25d1cvm7eznq",
+      "updated_at": "2020-01-05 13:42:19.104863",
+      "url": "https://api.chucknorris.io/jokes/o21pece2rn25d1cvm7eznq",
+      "value": "Tom Clancy has to pay royalties to Chuck Norris because \"The Sum of All Fears\" is the name of Chuck Norris' autobiography."
+    }
+  ]
+}
+```
+
+That is, the actual data of interest (`Joke[]`) is encapsulated in an object that has the fields `total` and `result`.
+In this case, you have two options:
+
+1. Implement a wrapper data transfer object (DTO)
+2. Implement a custom type adapter, that converts the raw response into the desired return object.
+
+For 1, this is straight forward
+
+```java
+class SearchDTO {
+    int total;
+    Joke[] result;
+}
+```
+
+For 2, let's look at how typeadapters work:
 
 ![Gson type adapter](./assets/images/GsonSpec.svg)
 
@@ -134,13 +170,13 @@ public abstract class TypeAdapter<T> {
 }
 ```
 
-- Write a type adapter that accepts the response objects from CNJDB and outputs an instance of `Joke`.
+- Write a type adapter that accepts the response objects from CNJDB's search endpoint and outputs an instance of `Joke[]`.
 - Register the type adapter with your Retrofit instance
 Note that you can use annotations on the `Joke` class, but you will have to write custom code to unwrap the joke from the response object.
 For this, you have two options:
 
-* Implement a wrapper class, add appropriate fields, and return the `Joke` once unwrapped.
-* Unwrap the response object manually, by using the `reader`'s `.beginObject()`, `.endObject()` and `.next*()` methods to determine the number of jokes.
+* Implement a wrapper class, add appropriate fields, and return the `Joke[]` once unwrapped.
+* Unwrap the response object manually, by using the `reader`'s `.beginObject()`, `.endObject()` and `.next...()` methods to determine the number of jokes.
 
 > Note: There is no need to implement the `write` method, since we're only consuming the API, but not sending to it.
 
