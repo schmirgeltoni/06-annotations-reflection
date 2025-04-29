@@ -1,5 +1,6 @@
 package ohm.softa.a06.model;
 
+import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,10 +14,9 @@ import java.util.List;
  */
 public final class Joke {
 
-	private String identifier;
-	private String content;
-	private List<String> rubrics;
-
+	@SerializedName("id") private String identifier;
+	@SerializedName("value") private String content;
+	@SerializedName("categories") private List<String> rubrics;
 
 	public String getIdentifier() {
 		return identifier;
@@ -24,6 +24,16 @@ public final class Joke {
 
 	public String getContent() {
 		return content;
+	}
+
+	public List<String> getRubrics() {
+		return rubrics;
+	}
+
+	public Joke(String identifier, String content, List<String> rubrics){
+		this.identifier = identifier;
+		this.content = content;
+		this.rubrics = rubrics;
 	}
 
 	@Override
@@ -37,6 +47,7 @@ public final class Joke {
 		return new EqualsBuilder()
 			.append(getIdentifier(), joke1.getIdentifier())
 			.append(getContent(), joke1.getContent())
+			.append(getRubrics(), joke1.getRubrics())
 			.append(rubrics, joke1.rubrics)
 			.isEquals();
 	}
@@ -46,7 +57,7 @@ public final class Joke {
 		return new HashCodeBuilder(17, 37)
 			.append(getIdentifier())
 			.append(getContent())
-			.append(rubrics)
+			.append(getRubrics())
 			.toHashCode();
 	}
 
